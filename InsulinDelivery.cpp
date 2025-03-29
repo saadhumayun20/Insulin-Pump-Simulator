@@ -27,11 +27,11 @@ InsulinDelivery::InsulinDelivery(PumpSystem* parentSystem)
     basalTimer->start(1000); // Every second
 }
 
-void InsulinDelivery::startBasal()
+void InsulinDelivery::startBasal(float baseRate)
 {
     if(parentSystem->isLocked()) return;
 
-    currentBasalRate = parentSystem->getCurrentProfile()->getBasalRate();
+    currentBasalRate = baseRate;
     parentSystem->getLogger()->logDeliveryEvent(
         DeliveryEvent(DeliveryEvent::BASAL, currentBasalRate)
     );
@@ -80,16 +80,66 @@ void InsulinDelivery::deliverBolus(float units)
     bolusTimer->start(1000); // 1-second intervals
 }
 
-float InsulinDelivery::calculateBolus(float glucose, float carbs) const
-{
+float InsulinDelivery::calculateBolus(float glucose, float carbs) const {
     const Profile* profile = parentSystem->getCurrentProfile();
-    const float target = profile->getTargetGlucose();
-    const float correction = (glucose > target) ?
-                           (glucose - target) / profile->getCorrectionFactor() : 0.0f;
+    if (!profile) { return 0.0f; }
 
-    return qBound(0.0f,
-                (carbs / profile->getCarbRatio()) + correction - ioBUnits,
-                25.0f);
+    // Food bolus
+    float carbBolus = carbs / profile->getCarbRatio();
+
+    // Correction bolus
+    float correction = (glucose > profile->getTargetGlucose())
+        ? (glucose - profile->getTargetGlucose()) / profile->getCorrectionFactor()
+        : 0.0f;
+
+    // Total with IOB adjustment
+    return qBound(0.0f, carbBolus + correction - ioBUnits, 25.0f);
+}
+
+// Extended bolus delivery system
+void InsulinDelivery::deliverExtendedBolus(float totalUnits,
+                                          float immediateFraction,
+                                          int durationHours) {
+    if(totalUnits <= 0 || durationHours < 1) return;
+
+    // Immediate portion
+    float immediateUnits = totalUnits * immediateFraction;
+    if(immediateUnits > 0) {
+        deliverBolus(immediateUnits); // Use existing bolus delivery
+    }
+
+    // Extended portion
+    float extendedUnits = totalUnits - immediateUnits;
+    ExtendedBolus newBolus{
+        .total = extendedUnits,
+        .remaining = extendedUnits,
+        .durationLeft = durationHours
+    };
+    activeExtendedBoluses.append(newBolus);
+
+    // Hourly delivery timer
+    QTimer* extendedTimer = new QTimer(this);
+    connect(extendedTimer, &QTimer::timeout, [=]() mutable {
+        for(auto& bolus : activeExtendedBoluses) {
+            if(bolus.durationLeft <= 0) continue;
+
+            float hourlyAmount = bolus.total / bolus.durationLeft;
+            deliverBolus(hourlyAmount); // Use base delivery method
+
+            bolus.remaining -= hourlyAmount;
+            bolus.durationLeft--;
+
+            parentSystem->getLogger()->logDeliveryEvent(
+                DeliveryEvent(DeliveryEvent::EXTENDED_BOLUS, hourlyAmount)
+            );
+
+            emit extendedBolusProgress(
+                bolus.total - bolus.remaining,
+                bolus.remaining
+            );
+        }
+    });
+    extendedTimer->start(3600000); // Every hour
 }
 
 // Getters

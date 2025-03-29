@@ -2,7 +2,9 @@
 #define CONTROLIQ_H
 
 #include <QObject>
+#include <QDateTime>
 #include "CGM.h"
+#include <QtMath>
 
 class ControlIQ : public QObject {
     Q_OBJECT
@@ -16,8 +18,13 @@ public slots:
     void autoSuspend();
 
 private:
+    void predictGlucose(float current, float trend, float& prediction);
+    void deliverAutoCorrection(float predictedGlucose);
+
     CGM* cgm;
-    bool isEnabled;
+    bool isEnabled = true;;
+    QDateTime lastCorrectionTime;
+    float lastBasalMultiplier = 1.0f;
     float targetGlucose;
 
 

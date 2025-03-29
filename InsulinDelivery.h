@@ -14,17 +14,28 @@ class InsulinDelivery : public QObject {
 public:
     explicit InsulinDelivery(PumpSystem* parentSystem);
 
-    void startBasal();
+    void startBasal(float baseRate);
     void stopBasal();
     void deliverBolus(float units);
+    void deliverExtendedBolus(float totalUnits, float immediateFraction, int durationHours);
     float calculateBolus(float glucose, float carbs) const;
 
     //getter
     float getCurrentBasalRate() const;
     float getActiveIOB() const;
 
+signals:
+    void extendedBolusProgress(float delivered, float remaining);
+
 private:
-    PumpSystem* parentSystem;
+    struct ExtendedBolus{
+        float total;
+        float remaining;
+        int durationLeft;
+    };
+
+    QList<ExtendedBolus> activeExtendedBoluses;
+     PumpSystem* parentSystem;
     float currentBasalRate;
     float ioBUnits;
 

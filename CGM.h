@@ -2,26 +2,24 @@
 #define CGM_H
 
 #include <QObject>
+#include <QDateTime>
 
-class CGM : public QObject{
+class CGM : public QObject {
     Q_OBJECT
-
 public:
-    explicit CGM(QObject *parent = nullptr);
+    explicit CGM(QObject* parent = nullptr);
 
-    bool pairDevice();
-
-    bool isConnected() const; //getter
-    float readGlucose() const; //getter
-
+    float readGlucose() const;
+    float getTrend() const;  // New
+    void updateGlucose(float value);  // For simulation
 
 signals:
     void glucoseUpdated(float value);
 
 private:
-    bool isConnected();
-    float currentGlucose();
-
+    float currentGlucose;
+    float previousGlucose;
+    QDateTime lastReadingTime;
 };
 
 #endif // CGM_H
