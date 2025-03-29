@@ -9,6 +9,7 @@ class ControlIQ : public QObject {
 
 public:
     explicit ControlIQ(CGM* glucoseMonitor, QObject *parent = nullptr);
+    CGM* getGlucoseMonitor() const;
 
 public slots:
     void adjustBasalRate();

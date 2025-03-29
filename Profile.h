@@ -23,7 +23,7 @@ public:
     float getBasalRate() const;
     float getCarbRatio() const;
     float getCorrectionFactor() const;
-
+    float getTargetGlucose() const;
 private:
     QString name;
     float basalRate;

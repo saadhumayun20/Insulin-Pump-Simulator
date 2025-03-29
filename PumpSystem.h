@@ -2,6 +2,7 @@
 #define PUMPSYSTEM_H
 
 #include <QObject>
+#include <QTimer>
 #include "Profile.h"
 #include "InsulinDelivery.h"
 #include "AlertSystem.h"
@@ -19,6 +20,8 @@ public:
     void powerOff();
     bool unlock(int pin);
     void chargeBattery();
+    void updateInsulinLevel(float units);
+
 
     InsulinDelivery* getDeliverySystem() const;
     AlertSystem* getAlerts() const;

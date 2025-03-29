@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include "DeliveryEvent.h"
+#include <QTimer>
+#include <QtMath>
 
 class PumpSystem;
 
