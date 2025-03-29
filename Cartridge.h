@@ -5,8 +5,8 @@ class Cartridge{
 public:
     explicit Cartridge(float capacity = 300.0f);
 
-    void replace();
-    void primeInfusionSet();
+    void refill();
+    //void primeInfusionSet();
 
     //getter
     float getCurrentLevel() const;

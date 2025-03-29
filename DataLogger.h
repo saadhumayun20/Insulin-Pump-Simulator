@@ -12,7 +12,7 @@ public:
     explicit DataLogger(QObject *parent = nullptr);
 
     void logDeliveryEvent(const DeliveryEvent& event);
-    QList<DeliveryEvent> viewDeliveryHistory() const;
+    QList<DeliveryEvent> getDeliveryHistory() const;
     void generateDataGraphs();
 
 private:

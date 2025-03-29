@@ -11,9 +11,9 @@ public:
     DeliveryEvent(EventType type, float units);
 
     //getters
-    QDateTime gettimeStamp() const;
-    EventType gettype() const;
-    float getunits() const;
+    QDateTime getTimeStamp() const;
+    EventType getType() const;
+    float getUnits() const;
 
 private:
     QDateTime timeStamp;

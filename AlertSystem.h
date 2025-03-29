@@ -15,12 +15,19 @@ public:
     void triggerLowBatteryWarning();
 
     bool isOcclusionAlarmActive() const;  // For safety checks
+    bool isLowInsulinAlarmActive() const;
+    bool isLowBatteryAlarmActive() const;
+
+signals:
+    void alertTriggered(QString message);
 
 private:
     explicit AlertSystem(QObject *parent = nullptr);
     static AlertSystem* m_instance;
 
     bool occlusionAlarmActive = false;
+    bool lowInsulinAlarmActive = false;
+    bool lowBatteryAlarmActive = false;
 };
 
 #endif // ALERTSYSTEM_H

@@ -5,7 +5,7 @@ class InfusionSet{
 public:
     InfusionSet();
 
-    bool checkOcclusion();
+    //bool checkOcclusion();
 
     //getter
     bool getIsOcculuded() const;

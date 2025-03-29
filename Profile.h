@@ -29,6 +29,7 @@ private:
     float basalRate;
     float carbRatio;
     float correctionFactor;
+    const float targetGlucose = 100.0f;
 };
 
 #endif // PROFILE_H
