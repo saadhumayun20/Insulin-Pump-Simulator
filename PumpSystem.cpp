@@ -1,6 +1,6 @@
 #include "PumpSystem.h"
 
-AlertSystem* AlertSystem::m_instance = nullptr;
+//AlertSystem* AlertSystem::m_instance = nullptr;
 
 PumpSystem::PumpSystem(QObject *parent) :
     QObject(parent),
@@ -51,6 +51,8 @@ void PumpSystem::updateInsulinLevel(float units){
     insulinLevel = qMax(insulinLevel - units, 0.0f);
 }
 
+void PumpSystem::lock() { locked = true; }
+
 //getter
 float PumpSystem::getBatteryLevel() const { return batteryLevel; }
 float PumpSystem::getInsulinLevel() const { return insulinLevel; }
@@ -61,4 +63,5 @@ AlertSystem* PumpSystem::getAlerts() const { return alerts; }
 DataLogger* PumpSystem::getLogger() const { return logger; }
 ControlIQ* PumpSystem::getControlIQ() const { return controlIQ; }
 CGM* PumpSystem::getGlucoseMonitor() const { return cgm; }
+QList<Profile*>& PumpSystem::getProfiles() { return profiles; }
 

@@ -21,6 +21,7 @@ public:
     bool unlock(int pin);
     void chargeBattery();
     void updateInsulinLevel(float units);
+    void lock();
 
 
     InsulinDelivery* getDeliverySystem() const;
@@ -33,6 +34,7 @@ public:
     float getInsulinLevel() const;
     bool isLocked() const;
     Profile* getCurrentProfile() const;
+    QList<Profile*>& getProfiles();
 
 private:
     Profile* currentProfile;

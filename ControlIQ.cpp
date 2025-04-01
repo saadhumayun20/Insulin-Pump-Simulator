@@ -18,6 +18,8 @@ ControlIQ::ControlIQ(CGM* cgm, QObject *parent)
     adjustmentTimer->start(300000); // 5 minutes
 }
 
+CGM* ControlIQ::getGlucoseMonitor() const {return cgm; }
+
 void ControlIQ::adjustBasalRate() {
     if(!isEnabled) return;
 

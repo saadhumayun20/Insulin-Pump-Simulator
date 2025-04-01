@@ -2,6 +2,8 @@
 
 AlertSystem* AlertSystem::m_instance = nullptr;
 
+AlertSystem::AlertSystem(QObject* parent) : QObject(parent), occlusionAlarmActive(false), lowInsulinAlarmActive(false), lowBatteryAlarmActive(false) {}
+
 AlertSystem* AlertSystem::instance() {
     if (!m_instance) m_instance = new AlertSystem();
     return m_instance;

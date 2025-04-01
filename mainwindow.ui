@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>470</height>
+    <width>960</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>20</y>
-      <width>511</width>
-      <height>361</height>
+      <x>20</x>
+      <y>10</y>
+      <width>921</width>
+      <height>581</height>
      </rect>
     </property>
     <widget class="QWidget" name="homeScreen">
@@ -29,8 +29,8 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>481</width>
-        <height>341</height>
+        <width>901</width>
+        <height>561</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -84,6 +84,13 @@
          </item>
         </layout>
        </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="btnLock">
+         <property name="text">
+          <string>Lock Pump</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -93,8 +100,8 @@
        <rect>
         <x>20</x>
         <y>10</y>
-        <width>461</width>
-        <height>231</height>
+        <width>891</width>
+        <height>451</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -103,12 +110,18 @@
          <property name="text">
           <string>Carbs (Grams):</string>
          </property>
+         <property name="placeholderText">
+          <string extracomment="Carbs (Grams):"/>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="txtGlucose">
          <property name="text">
           <string>Glucose (mg/dL): </string>
+         </property>
+         <property name="placeholderText">
+          <string extracomment="Glucose (mg/dL):"/>
          </property>
         </widget>
        </item>
@@ -124,10 +137,10 @@
      <widget class="QPushButton" name="btnCalculate">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>250</y>
-        <width>101</width>
-        <height>51</height>
+        <x>30</x>
+        <y>470</y>
+        <width>301</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -137,10 +150,10 @@
      <widget class="QPushButton" name="btnDeliver">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>250</y>
-        <width>101</width>
-        <height>51</height>
+        <x>570</x>
+        <y>470</y>
+        <width>331</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -148,7 +161,175 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page"/>
+    <widget class="QWidget" name="profileScreen">
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>19</x>
+        <y>19</y>
+        <width>891</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="btnAddProfile">
+         <property name="text">
+          <string>Add Profile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnEditProfile">
+         <property name="text">
+          <string>Edit Profile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnDeleteProfile">
+         <property name="text">
+          <string>Delete Profile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="lstProfiles">
+         <item>
+          <property name="text">
+           <string>Default</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Exercise</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sleep</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="btnBack">
+         <property name="text">
+          <string>Back</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="historyScreen">
+     <widget class="QWidget" name="verticalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>901</width>
+        <height>561</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_History">
+       <item>
+        <widget class="QChartView" name="glucoseChart">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignVCenter">
+        <widget class="QTableWidget" name="deliveryHistory">
+         <column>
+          <property name="text">
+           <string>Time</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Type</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Units</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QPushButton" name="btnBack_2">
+         <property name="text">
+          <string>Back</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="lockScreen">
+     <widget class="QLineEdit" name="txtPIN">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>250</y>
+        <width>121</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignHCenter|Qt::AlignTop</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnUnlock">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>280</y>
+        <width>83</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Unlock</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -157,12 +338,19 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>960</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">qchartview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
