@@ -29,6 +29,8 @@ public:
     DataLogger* getLogger() const;
     ControlIQ* getControlIQ() const;
     CGM* getGlucoseMonitor() const;
+    void setActiveProfile(Profile* profile);
+
 
     float getBatteryLevel() const;
     float getInsulinLevel() const;

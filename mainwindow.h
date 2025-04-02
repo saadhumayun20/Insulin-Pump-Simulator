@@ -46,6 +46,7 @@ private slots:
     void editProfile();
     void deleteProfile();
     void handleUnlock();
+    void setActiveProfile();
 
     // UI update handlers
     void updateUI();
@@ -57,6 +58,10 @@ private:
     PumpSystem *pumpSystem;
     QTimer *updateTimer;
     QLineSeries *glucoseSeries;
+
+    QChart *glucoseChart; // Persistent chart
+    QDateTimeAxis *axisX;
+    QValueAxis *axisY;
 
     void setupConnections();
     void initializeUI();

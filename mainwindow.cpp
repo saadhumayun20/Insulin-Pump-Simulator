@@ -12,11 +12,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     initializeUI();
     setupConnections();
+
+    glucoseChart = new QChart();
+    glucoseSeries = new QLineSeries();
+    axisX = new QDateTimeAxis();
+    axisY = new QValueAxis();
+
     setupCharts();
+    ui->glucoseChart->setChart(glucoseChart);
 
     updateTimer = new QTimer(this);
     connect(updateTimer, &QTimer::timeout, this, &MainWindow::updateUI);
     updateTimer->start(1000);
+
 
     // Simulate glucose updates
     QTimer *glucoseTimer = new QTimer(this);
@@ -27,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
         pumpSystem->getGlucoseMonitor()->updateGlucose(glucose);
     });
     glucoseTimer->start(5000); // Update every 5 seconds
+
 
     checkAndShowLockScreen();
 }
@@ -116,9 +125,11 @@ void MainWindow::setupConnections() {
     // Bolus screen connections
     connect(ui->btnCalculate, &QPushButton::clicked, this, &MainWindow::handleBolusCalculation);
     connect(ui->btnDeliver, &QPushButton::clicked, this, &MainWindow::deliverBolus);
+    connect(ui->btnBack_3, &QPushButton::clicked, [=](){ui->stackedWidget->setCurrentWidget(ui->homeScreen);});
 
     // Profile screen connections
     connect(ui->btnAddProfile, &QPushButton::clicked, this, &MainWindow::addProfile);
+    connect(ui->btnSetActive, &QPushButton::clicked, this, &MainWindow::setActiveProfile);
     connect(ui->btnEditProfile, &QPushButton::clicked, this, &MainWindow::editProfile);
     connect(ui->btnDeleteProfile, &QPushButton::clicked, this, &MainWindow::deleteProfile);
     connect(ui->btnBack, &QPushButton::clicked, [=](){ui->stackedWidget->setCurrentWidget(ui->homeScreen);});
@@ -137,40 +148,66 @@ void MainWindow::setupConnections() {
             this, &MainWindow::updateGlucoseChart);
 }
 
+//void MainWindow::setupCharts() {
+
+//    QChart *chart = new QChart();
+//    chart->setTitle("Glucose Trend");
+
+//    // Create data series
+//    glucoseSeries = new QLineSeries();
+//    glucoseSeries->setName("Glucose (mg/dL)");
+//    chart->addSeries(glucoseSeries);
+
+//    //chart->createDefaultAxes();
+//    //chart->axes(Qt::Vertical).first()->setRange(40, 400);
+//    QDateTimeAxis *axisX = new QDateTimeAxis;
+//    axisX->setFormat("hh:mm:ss");
+//    axisX->setTitleText("Time");
+//    axisX->setTickCount(10);
+//    chart->addAxis(axisX, Qt::AlignBottom);
+//    glucoseSeries->attachAxis(axisX);
+
+//    QValueAxis *axisY = new QValueAxis;
+//    axisY->setRange(40, 400); // Glucose range in mg/dL
+//    axisY->setTitleText("Glucose (mg/dL)");
+//    chart->addAxis(axisY, Qt::AlignLeft);
+//    glucoseSeries->attachAxis(axisY);
+
+//    // Set chart on view
+//    ui->glucoseChart->setChart(chart);
+//    ui->glucoseChart->setRenderHint(QPainter::Antialiasing, true);
+//    ui->glucoseChart->chart()->setAnimationOptions(QChart::NoAnimation);
+//    ui->glucoseChart->setMinimumSize(800, 300);
+//    ui->verticalLayout_History->setStretch(0, 3);
+//    ui->verticalLayout_History->setStretch(1, 1);
+
+//}
+
 void MainWindow::setupCharts() {
 
-    QChart *chart = new QChart();
-    chart->setTitle("Glucose Trend");
-
-    // Create data series
-    glucoseSeries = new QLineSeries();
     glucoseSeries->setName("Glucose (mg/dL)");
-    chart->addSeries(glucoseSeries);
+    glucoseChart->addSeries(glucoseSeries);
 
-    //chart->createDefaultAxes();
-    //chart->axes(Qt::Vertical).first()->setRange(40, 400);
-    QDateTimeAxis *axisX = new QDateTimeAxis;
+    // Axes
     axisX->setFormat("hh:mm:ss");
     axisX->setTitleText("Time");
     axisX->setTickCount(10);
-    chart->addAxis(axisX, Qt::AlignBottom);
+    glucoseChart->addAxis(axisX, Qt::AlignBottom);
     glucoseSeries->attachAxis(axisX);
 
-    QValueAxis *axisY = new QValueAxis;
-    axisY->setRange(40, 400); // Glucose range in mg/dL
-    axisY->setTitleText("Glucose (mg/dL)");
-    chart->addAxis(axisY, Qt::AlignLeft);
+    axisY->setRange(40, 400);
+    axisY->setTitleText("mg/dL");
+    glucoseChart->addAxis(axisY, Qt::AlignLeft);
     glucoseSeries->attachAxis(axisY);
 
-    // Set chart on view
-    ui->glucoseChart->setChart(chart);
-    ui->glucoseChart->setRenderHint(QPainter::Antialiasing);
+    //  rendering settings
     ui->glucoseChart->setMinimumSize(800, 300);
     ui->verticalLayout_History->setStretch(0, 3);
     ui->verticalLayout_History->setStretch(1, 1);
-
-
+    ui->glucoseChart->setRenderHint(QPainter::Antialiasing, true); // Enable antialiasing
+    glucoseChart->setAnimationOptions(QChart::NoAnimation); // Disable animations
 }
+
 
 void MainWindow::navigateToHome() {
     ui->stackedWidget->setCurrentWidget(ui->homeScreen);
@@ -189,10 +226,21 @@ void MainWindow::navigateToProfiles() {
     foreach(Profile* profile, pumpSystem->getProfiles()) {
         ui->lstProfiles->addItem(profile->getName());
     }
+
+    Profile* activeProfile = pumpSystem->getCurrentProfile();
+        if (activeProfile) {
+            for (int i = 0; i < ui->lstProfiles->count(); i++) {
+                if (ui->lstProfiles->item(i)->text() == activeProfile->getName()) {
+                    ui->lstProfiles->setCurrentRow(i);
+                    break;
+                }
+            }
+        }
 }
 
 void MainWindow::navigateToHistory() {
     ui->stackedWidget->setCurrentWidget(ui->historyScreen);
+    ui->glucoseChart->repaint();
     updateDeliveryHistory();
 }
 
@@ -320,6 +368,33 @@ void MainWindow::handleUnlock() {
     }
 }
 
+void MainWindow::setActiveProfile() {
+    QListWidgetItem* selectedItem = ui->lstProfiles->currentItem();
+    if (!selectedItem) {
+        QMessageBox::warning(this, "Error", "Please select a profile to set as active");
+        return;
+    }
+
+    QString name = selectedItem->text();
+    Profile* profile = nullptr;
+
+    // Find the profile
+    foreach(Profile* p, pumpSystem->getProfiles()) {
+        if (p->getName() == name) {
+            profile = p;
+            break;
+        }
+    }
+
+    if (profile) {
+        pumpSystem->setActiveProfile(profile);
+        QMessageBox::information(this, "Success", "Profile set as active");
+    } else {
+        QMessageBox::warning(this, "Error", "Failed to set profile as active");
+    }
+}
+
+
 // UI update handlers
 void MainWindow::updateUI() {
 
@@ -336,17 +411,28 @@ void MainWindow::updateUI() {
     }
 }
 
-void MainWindow::updateGlucoseChart(float glucose) {
-    qint64 timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch(); // Use current time for both table and chart
+//void MainWindow::updateGlucoseChart(float glucose) {
+//    qint64 timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch(); // Use current time for both table and chart
 
+//    glucoseSeries->append(timestamp, glucose);
+
+//    // Adjust x-axis range to show only recent data (e.g., last 10 minutes)
+//    qint64 tenMinutesAgo = timestamp - 10 * 60 * 1000; // 10 minutes in milliseconds
+//    ui->glucoseChart->chart()->axes(Qt::Horizontal).first()->setRange(
+//        QDateTime::fromMSecsSinceEpoch(tenMinutesAgo),
+//        QDateTime::fromMSecsSinceEpoch(timestamp)
+//    );
+//}
+
+void MainWindow::updateGlucoseChart(float glucose) {
+    // Append new data to existing series
+    qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
     glucoseSeries->append(timestamp, glucose);
 
-    // Adjust x-axis range to show only recent data (e.g., last 10 minutes)
-    qint64 tenMinutesAgo = timestamp - 10 * 60 * 1000; // 10 minutes in milliseconds
-    ui->glucoseChart->chart()->axes(Qt::Horizontal).first()->setRange(
-        QDateTime::fromMSecsSinceEpoch(tenMinutesAgo),
-        QDateTime::fromMSecsSinceEpoch(timestamp)
-    );
+    // Adjust x-axis range to show last 10 minutes
+    qint64 tenMinutesAgo = timestamp - 10 * 60 * 1000;
+    axisX->setRange(QDateTime::fromMSecsSinceEpoch(tenMinutesAgo),
+                    QDateTime::fromMSecsSinceEpoch(timestamp));
 }
 
 

@@ -53,6 +53,11 @@ void PumpSystem::updateInsulinLevel(float units){
 
 void PumpSystem::lock() { locked = true; }
 
+void PumpSystem::setActiveProfile(Profile *profile) {
+    if(profile) {
+        currentProfile = profile;
+    }
+}
 //getter
 float PumpSystem::getBatteryLevel() const { return batteryLevel; }
 float PumpSystem::getInsulinLevel() const { return insulinLevel; }
