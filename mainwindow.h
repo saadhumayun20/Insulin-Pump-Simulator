@@ -59,7 +59,7 @@ private:
     QTimer *updateTimer;
     QLineSeries *glucoseSeries;
 
-    QChart *glucoseChart; // Persistent chart
+    QChart *glucoseChart;
     QDateTimeAxis *axisX;
     QValueAxis *axisY;
 

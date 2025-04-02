@@ -148,41 +148,6 @@ void MainWindow::setupConnections() {
             this, &MainWindow::updateGlucoseChart);
 }
 
-//void MainWindow::setupCharts() {
-
-//    QChart *chart = new QChart();
-//    chart->setTitle("Glucose Trend");
-
-//    // Create data series
-//    glucoseSeries = new QLineSeries();
-//    glucoseSeries->setName("Glucose (mg/dL)");
-//    chart->addSeries(glucoseSeries);
-
-//    //chart->createDefaultAxes();
-//    //chart->axes(Qt::Vertical).first()->setRange(40, 400);
-//    QDateTimeAxis *axisX = new QDateTimeAxis;
-//    axisX->setFormat("hh:mm:ss");
-//    axisX->setTitleText("Time");
-//    axisX->setTickCount(10);
-//    chart->addAxis(axisX, Qt::AlignBottom);
-//    glucoseSeries->attachAxis(axisX);
-
-//    QValueAxis *axisY = new QValueAxis;
-//    axisY->setRange(40, 400); // Glucose range in mg/dL
-//    axisY->setTitleText("Glucose (mg/dL)");
-//    chart->addAxis(axisY, Qt::AlignLeft);
-//    glucoseSeries->attachAxis(axisY);
-
-//    // Set chart on view
-//    ui->glucoseChart->setChart(chart);
-//    ui->glucoseChart->setRenderHint(QPainter::Antialiasing, true);
-//    ui->glucoseChart->chart()->setAnimationOptions(QChart::NoAnimation);
-//    ui->glucoseChart->setMinimumSize(800, 300);
-//    ui->verticalLayout_History->setStretch(0, 3);
-//    ui->verticalLayout_History->setStretch(1, 1);
-
-//}
-
 void MainWindow::setupCharts() {
 
     glucoseSeries->setName("Glucose (mg/dL)");
@@ -410,19 +375,6 @@ void MainWindow::updateUI() {
         ui->statusbar->showMessage("ALERT: Low battery", 0);
     }
 }
-
-//void MainWindow::updateGlucoseChart(float glucose) {
-//    qint64 timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch(); // Use current time for both table and chart
-
-//    glucoseSeries->append(timestamp, glucose);
-
-//    // Adjust x-axis range to show only recent data (e.g., last 10 minutes)
-//    qint64 tenMinutesAgo = timestamp - 10 * 60 * 1000; // 10 minutes in milliseconds
-//    ui->glucoseChart->chart()->axes(Qt::Horizontal).first()->setRange(
-//        QDateTime::fromMSecsSinceEpoch(tenMinutesAgo),
-//        QDateTime::fromMSecsSinceEpoch(timestamp)
-//    );
-//}
 
 void MainWindow::updateGlucoseChart(float glucose) {
     // Append new data to existing series
