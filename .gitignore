@@ -1,6 +1,12 @@
 HEAD
 # Prerequisites
 *.d
+# Ignore build/test artifacts
+tests/target_wrapper.sh
+tests/tests
+tests/*.o
+tests/*.moc
+tests/moc_*.cpp
 
 # Compiled Object files
 *.slo
