@@ -25,5 +25,22 @@ A Qt-based C++ simulation of a closed-loop insulin pump system inspired by Contr
 
 ---
 
+## How to Build & Run the App
+- **Option 1: Qt Creator (GUI)**
+1) Open 3004_Project.pro in Qt Creator
+
+2) Click Build then Run
+
+- **Option 2: Terminal (CLI)**
+1) cd COMP3004-Final-Project
+2) qmake
+3) make
+4) ./3004_Project     # Launches the simulator GUI
+
+## Test Coverage (So Far)
+Profile: constructor, editing
+
+CGM, AlertSystem, ControlIQ, InsulinDelivery (in process)
+
 ##  Directory Structure
 
