@@ -17,7 +17,7 @@ A Qt-based C++ simulation of a closed-loop insulin pump system inspired by Contr
 
 ---
 
-## 🛠 Technologies
+##  Technologies
 
 - **C++17**
 - **Qt 5 (Widgets + Charts + Testlib)**
