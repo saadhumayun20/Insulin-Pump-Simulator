@@ -10,4 +10,5 @@ SOURCES += \
 
 HEADERS += \
     ../src/Profile.h
+QMAKE_CLEAN += tests target_wrapper.sh *.o moc_*.cpp *.moc Makefile
 
