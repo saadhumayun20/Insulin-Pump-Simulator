@@ -3,8 +3,8 @@
 #include <QtMath>
 
 // Constants (match Tandem specs)
-const float TARGET_LOW = 112.5f;    // 6.3 mmol/L
-const float TARGET_HIGH = 160.0f;   // 8.9 mmol/L
+const float TARGET_LOW = 112.5f;
+const float TARGET_HIGH = 160.0f;
 const float HYPO_THRESHOLD = 70.0f;
 const float HYPER_THRESHOLD = 180.0f;
 const float MAX_AUTO_BOLUS = 6.0f;

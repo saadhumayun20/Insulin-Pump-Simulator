@@ -23,7 +23,12 @@ public:
     void updateInsulinLevel(float units);
     void lock();
 
+    //for testing the occlusion
+    void simulateOcclusion();
+    void clearOcclusion();
+    bool isOcclusionActive() const;
 
+    //getter/setters
     virtual InsulinDelivery* getDeliverySystem() const;
     AlertSystem* getAlerts() const;
     virtual DataLogger* getLogger() const;
@@ -38,6 +43,12 @@ public:
     virtual Profile* getCurrentProfile() const;
     QList<Profile*>& getProfiles();
 
+    void setBatteryLevel(float level);
+    void setInsulinLevel(float level);
+
+signals:
+    void batteryLevelChanged(float batteryLevel);
+
 private:
     Profile* currentProfile;
     QList<Profile*> profiles;
@@ -49,6 +60,7 @@ private:
     float batteryLevel;
     float insulinLevel;
     bool locked;
+    bool occlusionActive;
 
 };
 

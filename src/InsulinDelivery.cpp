@@ -47,6 +47,11 @@ void InsulinDelivery::stopBasal()
 
 void InsulinDelivery::deliverBolus(float units)
 {
+    if (parentSystem->isOcclusionActive()) {
+        parentSystem->getAlerts()->triggerOcclusionAlarm();
+        return;
+    }
+
     if(units <= 0.0f || units > 25.0f) {
         parentSystem->getAlerts()->triggerOcclusionAlarm();
         return;
@@ -139,7 +144,7 @@ void InsulinDelivery::deliverExtendedBolus(float totalUnits,
             );
         }
     });
-    extendedTimer->start(3600000); // Every hour
+    extendedTimer->start(3600000);
 }
 
 // Getters

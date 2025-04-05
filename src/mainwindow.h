@@ -57,6 +57,7 @@ private:
     Ui::MainWindow *ui;
     PumpSystem *pumpSystem;
     QTimer *updateTimer;
+    QTimer *historyUpdateTimer;
     QLineSeries *glucoseSeries;
 
     QChart *glucoseChart;

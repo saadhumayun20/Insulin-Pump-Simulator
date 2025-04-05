@@ -43,9 +43,11 @@ bool PumpSystem::unlock(int pin){
     return !locked;
 }
 
-void PumpSystem::chargeBattery(){
-    batteryLevel = qMin(batteryLevel + 10.0f, 100.0f);
+void PumpSystem::chargeBattery() {
+    batteryLevel = qMin(batteryLevel + 50.0f, 100.0f);
+    emit batteryLevelChanged(batteryLevel);
 }
+
 
 void PumpSystem::updateInsulinLevel(float units){
     insulinLevel = qMax(insulinLevel - units, 0.0f);
@@ -58,6 +60,12 @@ void PumpSystem::setActiveProfile(Profile *profile) {
         currentProfile = profile;
     }
 }
+
+//occlusion testing
+void PumpSystem::simulateOcclusion() { occlusionActive = true; }
+void PumpSystem::clearOcclusion() { occlusionActive = false; }
+bool PumpSystem::isOcclusionActive() const {return occlusionActive; }
+
 //getter
 float PumpSystem::getBatteryLevel() const { return batteryLevel; }
 float PumpSystem::getInsulinLevel() const { return insulinLevel; }
@@ -70,3 +78,10 @@ ControlIQ* PumpSystem::getControlIQ() const { return controlIQ; }
 CGM* PumpSystem::getGlucoseMonitor() const { return cgm; }
 QList<Profile*>& PumpSystem::getProfiles() { return profiles; }
 
+void PumpSystem::setBatteryLevel(float level) {
+    batteryLevel = qBound(0.0f, level, 100.0f);
+}
+
+void PumpSystem::setInsulinLevel(float level) {
+    insulinLevel = qMax(0.0f, level);
+}

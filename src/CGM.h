@@ -10,8 +10,8 @@ public:
     explicit CGM(QObject* parent = nullptr);
 
     virtual float readGlucose() const;
-    virtual float getTrend() const;  // New
-    void updateGlucose(float value);  // For simulation
+    virtual float getTrend() const;
+    void updateGlucose(float value);
 
 signals:
     void glucoseUpdated(float value);

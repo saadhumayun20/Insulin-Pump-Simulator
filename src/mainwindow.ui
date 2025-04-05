@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>654</height>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -350,6 +350,45 @@
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="btnTestLowInsulin">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>590</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test Low Insulin</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnTestLowBattery">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>590</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test Low Battery</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnTestOcclusion">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>590</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test Occlusion</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

@@ -13,7 +13,7 @@ public:
 
     virtual void logDeliveryEvent(const DeliveryEvent& event);
     QList<DeliveryEvent> getDeliveryHistory() const;
-    void generateDataGraphs();
+    //void generateDataGraphs();
 
 private:
     QList<DeliveryEvent> deliveryHistory;

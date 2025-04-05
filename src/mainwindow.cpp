@@ -30,12 +30,21 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *glucoseTimer = new QTimer(this);
     connect(glucoseTimer, &QTimer::timeout, [this]() {
         static float glucose = 120.0f;
-        // Random walk simulation
         glucose += (rand() % 11 - 5);
         pumpSystem->getGlucoseMonitor()->updateGlucose(glucose);
     });
-    glucoseTimer->start(5000); // Update every 5 seconds
+    glucoseTimer->start(2500); // Update every 2.5 seconds
 
+    historyUpdateTimer = new QTimer(this);
+    connect(historyUpdateTimer, &QTimer::timeout, this, &MainWindow::updateDeliveryHistory);
+
+    connect(ui->stackedWidget, &QStackedWidget::currentChanged, [=](int index) {
+        if (ui->stackedWidget->widget(index) == ui->historyScreen) {
+            historyUpdateTimer->start(2500); // Update every 2.5 seconds
+        } else {
+            historyUpdateTimer->stop();
+        }
+    });
 
     checkAndShowLockScreen();
 }
@@ -61,20 +70,20 @@ void MainWindow::initializeUI() {
                 "}"
                 ""
                 "QPushButton:hover {"
-                "   background-color: #005a9e;" // Darker blue on hover
+                "   background-color: #005a9e;"
                 "}"
                 ""
                 "QPushButton#btnLock {"
-                "   background-color: #d13438;" // Red for lock button
+                "   background-color: #d13438;"
                 "}"
                 ""
                 "QPushButton#btnLock:hover {"
-                "   background-color: #a4262c;" // Darker red on hover
+                "   background-color: #a4262c;"
                 "}"
                 ""
                 "QLabel#lblBattery, QLabel#lblInsulin, QLabel#lblIOB {"
-                "   background-color: #ffffff;" // White background for status labels
-                "   border: 1px solid #cccccc;" // Light gray border
+                "   background-color: #ffffff;"
+                "   border: 1px solid #cccccc;"
                 "   padding: 5px;"
                 "   border-radius: 5px;"
                 "   font-weight: bold;"
@@ -82,12 +91,12 @@ void MainWindow::initializeUI() {
                 ""
                 "QTableWidget {"
                 "   background-color: white;"
-                "   alternate-background-color: #f2f2f2;" // Alternating row colors
+                "   alternate-background-color: #f2f2f2;"
                 "   gridline-color: #cccccc;"
                 "}"
                 ""
                 "QHeaderView::section {"
-                "   background-color: #0078d4;" // Blue table headers
+                "   background-color: #0078d4;"
                 "   color: white;"
                 "   padding: 5px;"
                 "}"
@@ -146,6 +155,28 @@ void MainWindow::setupConnections() {
     // CGM connections
     connect(pumpSystem->getGlucoseMonitor(), &CGM::glucoseUpdated,
             this, &MainWindow::updateGlucoseChart);
+
+    // Test buttons
+    connect(ui->btnTestLowBattery, &QPushButton::clicked, [=](){
+        pumpSystem->setBatteryLevel(3.0f); // Simulate critical battery
+        pumpSystem->getAlerts()->triggerLowBatteryWarning();
+    });
+
+    connect(pumpSystem, &PumpSystem::batteryLevelChanged, [=](float level){
+        ui->lblBattery->setText(QString("%1%").arg(level));
+    });
+
+
+    connect(ui->btnTestLowInsulin, &QPushButton::clicked, [=](){
+        pumpSystem->setInsulinLevel(5.0f); // Simulate low insulin
+        pumpSystem->getAlerts()->triggerLowInsulinAlert();
+    });
+
+    connect(ui->btnTestOcclusion, &QPushButton::clicked, [=](){
+        pumpSystem->simulateOcclusion();
+        pumpSystem->getAlerts()->triggerOcclusionAlarm();
+    });
+
 }
 
 void MainWindow::setupCharts() {
@@ -169,8 +200,8 @@ void MainWindow::setupCharts() {
     ui->glucoseChart->setMinimumSize(800, 300);
     ui->verticalLayout_History->setStretch(0, 3);
     ui->verticalLayout_History->setStretch(1, 1);
-    ui->glucoseChart->setRenderHint(QPainter::Antialiasing, true); // Enable antialiasing
-    glucoseChart->setAnimationOptions(QChart::NoAnimation); // Disable animations
+    ui->glucoseChart->setRenderHint(QPainter::Antialiasing, true);
+    glucoseChart->setAnimationOptions(QChart::NoAnimation);
 }
 
 
@@ -193,14 +224,14 @@ void MainWindow::navigateToProfiles() {
     }
 
     Profile* activeProfile = pumpSystem->getCurrentProfile();
-        if (activeProfile) {
-            for (int i = 0; i < ui->lstProfiles->count(); i++) {
-                if (ui->lstProfiles->item(i)->text() == activeProfile->getName()) {
-                    ui->lstProfiles->setCurrentRow(i);
-                    break;
-                }
+    if (activeProfile) {
+        for (int i = 0; i < ui->lstProfiles->count(); i++) {
+            if (ui->lstProfiles->item(i)->text() == activeProfile->getName()) {
+                ui->lstProfiles->setCurrentRow(i);
+                break;
             }
         }
+    }
 }
 
 void MainWindow::navigateToHistory() {
@@ -343,7 +374,7 @@ void MainWindow::setActiveProfile() {
     QString name = selectedItem->text();
     Profile* profile = nullptr;
 
-    // Find the profile
+    // Find  profile
     foreach(Profile* p, pumpSystem->getProfiles()) {
         if (p->getName() == name) {
             profile = p;
@@ -393,7 +424,7 @@ void MainWindow::updateDeliveryHistory() {
     const QList<DeliveryEvent>& history = pumpSystem->getLogger()->getDeliveryHistory();
     if (history.isEmpty()) return; // No events to update
 
-    const DeliveryEvent& event = history.last(); // Get the most recent event
+    const DeliveryEvent& event = history.last();
 
     // Add event to the table
     int row = ui->deliveryHistory->rowCount();
@@ -402,11 +433,11 @@ void MainWindow::updateDeliveryHistory() {
     QString formattedTime = event.getTimeStamp().toString("hh:mm:ss");
     QTableWidgetItem* timeItem = new QTableWidgetItem(formattedTime);
     QTableWidgetItem* typeItem = new QTableWidgetItem(
-        event.getType() == DeliveryEvent::BASAL ? "Basal" :
-        event.getType() == DeliveryEvent::BOLUS ? "Bolus" :
-        event.getType() == DeliveryEvent::SUSPEND ? "Suspend" :
-        "Extended Bolus"
-    );
+                event.getType() == DeliveryEvent::BASAL ? "Basal" :
+                                                          event.getType() == DeliveryEvent::BOLUS ? "Bolus" :
+                                                                                                    event.getType() == DeliveryEvent::SUSPEND ? "Suspend" :
+                                                                                                                                                "Extended Bolus"
+                                                                                                                                                );
     QTableWidgetItem* unitsItem = new QTableWidgetItem(QString("%1U").arg(event.getUnits()));
 
     ui->deliveryHistory->setItem(row, 0, timeItem);
@@ -420,9 +451,40 @@ void MainWindow::updateDeliveryHistory() {
 
 
 void MainWindow::handleAlert(const QString& message) {
-    statusBar()->showMessage(message, 5000);
-    QMessageBox::warning(this, "Pump Alert", message);
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setText(message);
+
+    if (message.contains("Battery")) {
+        //ui->btnPlugIn->setVisible(true);
+        QPushButton* plugInButton = msgBox.addButton("Plug In", QMessageBox::ActionRole);
+        connect(plugInButton, &QPushButton::clicked, [=](){
+            pumpSystem->chargeBattery();
+            pumpSystem->getAlerts()->clearAlerts();
+            //ui->btnPlugIn->setVisible(false);
+            updateUI();
+        });
+    }
+    else if (message.contains("Insulin")) {
+        QPushButton* refillButton = msgBox.addButton("Refill", QMessageBox::ActionRole);
+        connect(refillButton, &QPushButton::clicked, [=](){
+            pumpSystem->setInsulinLevel(300.0f);
+            pumpSystem->getAlerts()->clearAlerts();
+            updateUI();
+        });
+    }
+    else if (message.contains("Occlusion")) {
+        QPushButton* clearButton = msgBox.addButton("Clear Occlusion", QMessageBox::ActionRole);
+        connect(clearButton, &QPushButton::clicked, [=](){
+            pumpSystem->clearOcclusion();
+            pumpSystem->getAlerts()->clearAlerts();
+            updateUI();
+        });
+    }
+
+    msgBox.exec();
 }
+
 
 void MainWindow::checkAndShowLockScreen() {
     if (pumpSystem->isLocked()) {
