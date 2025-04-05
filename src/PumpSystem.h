@@ -35,7 +35,7 @@ public:
     float getBatteryLevel() const;
     float getInsulinLevel() const;
     bool isLocked() const;
-    Profile* getCurrentProfile() const;
+    virtual Profile* getCurrentProfile() const;
     QList<Profile*>& getProfiles();
 
 private:

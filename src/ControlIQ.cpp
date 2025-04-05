@@ -10,8 +10,8 @@ const float HYPER_THRESHOLD = 180.0f;
 const float MAX_AUTO_BOLUS = 6.0f;
 const int PREDICTION_MINUTES = 30;
 
-ControlIQ::ControlIQ(CGM* cgm, QObject *parent)
-    : QObject(parent), cgm(cgm)
+ControlIQ::ControlIQ(CGM* cgm, PumpSystem* pump, QObject *parent)
+    : QObject(parent), cgm(cgm), pump(pump)
 {
     QTimer* adjustmentTimer = new QTimer(this);
     connect(adjustmentTimer, &QTimer::timeout, this, &ControlIQ::adjustBasalRate);
@@ -23,7 +23,6 @@ CGM* ControlIQ::getGlucoseMonitor() const {return cgm; }
 void ControlIQ::adjustBasalRate() {
     if(!isEnabled) return;
 
-    PumpSystem* pump = qobject_cast<PumpSystem*>(parent());
     if(!pump) return;
 
     Profile* profile = pump->getCurrentProfile();  // Get profile from parent
@@ -51,7 +50,6 @@ void ControlIQ::adjustBasalRate() {
 }
 
 void ControlIQ::autoSuspend() {
-    PumpSystem* pump = qobject_cast<PumpSystem*>(parent());
     if(pump) {
         pump->getDeliverySystem()->stopBasal();
         pump->getLogger()->logDeliveryEvent(DeliveryEvent(DeliveryEvent::SUSPEND, 0.0f));
@@ -64,7 +62,6 @@ void ControlIQ::predictGlucose(float current, float trend, float& prediction) {
 }
 
 void ControlIQ::deliverAutoCorrection(float predictedGlucose) {
-    PumpSystem* pump = qobject_cast<PumpSystem*>(parent());
     if(!pump || lastCorrectionTime.secsTo(QDateTime::currentDateTime()) < 3600) return;
 
     Profile* profile = pump->getCurrentProfile();
@@ -78,3 +75,8 @@ void ControlIQ::deliverAutoCorrection(float predictedGlucose) {
         lastCorrectionTime = QDateTime::currentDateTime();
     }
 }
+
+void ControlIQ::setLastCorrectionTime(const QDateTime& time) {
+    lastCorrectionTime = time;
+}
+
