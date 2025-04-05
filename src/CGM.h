@@ -19,7 +19,9 @@ signals:
 private:
     float currentGlucose;
     float previousGlucose;
-    QDateTime lastReadingTime;
+    QDateTime currentReadingTime;
+    QDateTime previousReadingTime;
+
 };
 
 #endif // CGM_H
