@@ -14,9 +14,9 @@ class InsulinDelivery : public QObject {
 public:
     explicit InsulinDelivery(PumpSystem* parentSystem);
 
-    void startBasal(float baseRate);
-    void stopBasal();
-    void deliverBolus(float units);
+    virtual void startBasal(float baseRate);
+    virtual void stopBasal();
+    virtual void deliverBolus(float units);
     void deliverExtendedBolus(float totalUnits, float immediateFraction, int durationHours);
     float calculateBolus(float glucose, float carbs) const;
 

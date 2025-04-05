@@ -5,6 +5,7 @@
 #include "../src/InsulinDelivery.h"
 #include "../src/DataLogger.h"
 #include "../src/CGM.h"
+#include "../src/PumpSystem.h"
 
 // Mock CGM that returns custom glucose and trend values
 class MockCGM : public CGM {
@@ -28,9 +29,9 @@ public:
     float lastBolus = -1.0f;
     bool stopCalled = false;
 
-    void startBasal(float rate) { lastBasal = rate; }
-    void deliverBolus(float units) { lastBolus = units; }
-    void stopBasal() { stopCalled = true; }
+    void startBasal(float rate) override { lastBasal = rate; }
+    void deliverBolus(float units) override { lastBolus = units; }
+    void stopBasal() override { stopCalled = true; }
 };
 
 // Mock logger that sets a flag when a delivery is logged
@@ -39,24 +40,26 @@ public:
     MockLogger(QObject* parent = nullptr) : DataLogger(parent) {}
     bool logged = false;
 
-    void logDeliveryEvent(const DeliveryEvent&) { logged = true; }
+    void logDeliveryEvent(const DeliveryEvent&) override { logged = true; }
 };
 
-// Mock PumpSystem that connects all dependencies (no inheritance from PumpSystem)
-class MockPumpSystem : public QObject {
+// Mock PumpSystem inheriting from real PumpSystem
+class MockPumpSystem : public PumpSystem {
     Q_OBJECT
 public:
     MockPumpSystem(Profile* p, MockDelivery* d, MockLogger* l)
-        : profile(p), delivery(d), logger(l) {}
+        : PumpSystem(nullptr), profile(p), mockDelivery(d), mockLogger(l) {
+        setActiveProfile(profile);
+    }
 
-    Profile* getCurrentProfile() const { return profile; }
-    InsulinDelivery* getDeliverySystem() const { return delivery; }
-    DataLogger* getLogger() const { return logger; }
+    InsulinDelivery* getDeliverySystem() const override { return mockDelivery; }
+    DataLogger* getLogger() const override { return mockLogger; }
+    Profile* getCurrentProfile() const override { return profile; }
 
 private:
     Profile* profile;
-    MockDelivery* delivery;
-    MockLogger* logger;
+    MockDelivery* mockDelivery;
+    MockLogger* mockLogger;
 };
 
 // Test class for ControlIQ
@@ -76,7 +79,7 @@ private slots:
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
         control.adjustBasalRate();
 
         QVERIFY(!delivery->stopCalled);
@@ -95,7 +98,7 @@ private slots:
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
         control.adjustBasalRate();
 
         QVERIFY(delivery->stopCalled);
@@ -104,15 +107,15 @@ private slots:
     // Should increase basal rate if glucose is high and rising
     void testIncreasedBasal() {
         auto* cgm = new MockCGM();
-        cgm->glucose = 170.0f;
-        cgm->trend = 1.0f;
+        cgm->glucose = 165.0f;
+        cgm->trend = 0.3f;
 
         auto* profile = new Profile("Mock", 1.0f, 15.0f, 50.0f);
         auto* delivery = new MockDelivery();
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
         control.adjustBasalRate();
 
         QVERIFY(delivery->lastBasal > 1.0f);
@@ -129,7 +132,7 @@ private slots:
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
         control.adjustBasalRate();
 
         QVERIFY(delivery->lastBasal < 1.0f);
@@ -146,7 +149,8 @@ private slots:
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
+	control.setLastCorrectionTime(QDateTime::currentDateTime().addSecs(-4000));
         control.adjustBasalRate();
 
         QVERIFY(delivery->lastBolus > 0.0f);
@@ -163,7 +167,8 @@ private slots:
         auto* logger = new MockLogger();
         auto* pump = new MockPumpSystem(profile, delivery, logger);
 
-        ControlIQ control(cgm, pump);
+        ControlIQ control(cgm, pump, nullptr);
+	control.setLastCorrectionTime(QDateTime::currentDateTime().addSecs(-4000));
         control.adjustBasalRate();
 
         QCOMPARE(delivery->lastBolus, 6.0f);

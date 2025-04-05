@@ -8,7 +8,7 @@ PumpSystem::PumpSystem(QObject *parent) :
     delivery(new InsulinDelivery(this)),
     alerts(AlertSystem::instance()),
     logger(new DataLogger(this)),
-    controlIQ(new ControlIQ(new CGM(this), this)),
+    controlIQ(new ControlIQ(new CGM(this), this, this)),
     cgm(controlIQ->getGlucoseMonitor()),
     batteryLevel(100.0f),
     insulinLevel(300.0f),

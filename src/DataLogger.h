@@ -11,7 +11,7 @@ class DataLogger : public QObject{
 public:
     explicit DataLogger(QObject *parent = nullptr);
 
-    void logDeliveryEvent(const DeliveryEvent& event);
+    virtual void logDeliveryEvent(const DeliveryEvent& event);
     QList<DeliveryEvent> getDeliveryHistory() const;
     void generateDataGraphs();
 
