@@ -24,9 +24,9 @@ public:
     void lock();
 
 
-    InsulinDelivery* getDeliverySystem() const;
+    virtual InsulinDelivery* getDeliverySystem() const;
     AlertSystem* getAlerts() const;
-    DataLogger* getLogger() const;
+    virtual DataLogger* getLogger() const;
     ControlIQ* getControlIQ() const;
     CGM* getGlucoseMonitor() const;
     void setActiveProfile(Profile* profile);

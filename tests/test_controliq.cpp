@@ -4,7 +4,6 @@
 #include "../src/Profile.h"
 #include "../src/InsulinDelivery.h"
 #include "../src/DataLogger.h"
-#include "../src/PumpSystem.h"
 #include "../src/CGM.h"
 
 // Mock CGM that returns custom glucose and trend values
@@ -43,7 +42,7 @@ public:
     void logDeliveryEvent(const DeliveryEvent&) { logged = true; }
 };
 
-// Mock PumpSystem that connects all dependencies
+// Mock PumpSystem that connects all dependencies (no inheritance from PumpSystem)
 class MockPumpSystem : public QObject {
     Q_OBJECT
 public:
@@ -66,7 +65,7 @@ class TestControlIQ : public QObject {
 
 private slots:
 
-    // Should do nothing if prediction is between target range
+    // Should not adjust basal or bolus if glucose prediction is within normal range
     void testNoActionWithinTarget() {
         auto* cgm = new MockCGM();
         cgm->glucose = 130.0f;
@@ -85,7 +84,7 @@ private slots:
         QCOMPARE(delivery->lastBolus, -1.0f);
     }
 
-    // Should suspend on low prediction
+    // Should stop basal if predicted glucose is low (hypoglycemia)
     void testSuspendOnHypo() {
         auto* cgm = new MockCGM();
         cgm->glucose = 70.0f;
@@ -102,7 +101,7 @@ private slots:
         QVERIFY(delivery->stopCalled);
     }
 
-    // Should increase basal rate if predicted glucose > target high
+    // Should increase basal rate if glucose is high and rising
     void testIncreasedBasal() {
         auto* cgm = new MockCGM();
         cgm->glucose = 170.0f;
@@ -119,7 +118,7 @@ private slots:
         QVERIFY(delivery->lastBasal > 1.0f);
     }
 
-    // Should reduce basal rate if predicted glucose < target low
+    // Should decrease basal rate if glucose is low and falling
     void testDecreasedBasal() {
         auto* cgm = new MockCGM();
         cgm->glucose = 100.0f;
@@ -136,7 +135,7 @@ private slots:
         QVERIFY(delivery->lastBasal < 1.0f);
     }
 
-    // Should trigger auto bolus if predicted glucose exceeds threshold
+    // Should deliver auto bolus if predicted glucose exceeds hyperglycemia threshold
     void testCorrectionOnHyper() {
         auto* cgm = new MockCGM();
         cgm->glucose = 200.0f;
@@ -153,7 +152,7 @@ private slots:
         QVERIFY(delivery->lastBolus > 0.0f);
     }
 
-    // Ensures auto bolus is capped at 6.0 units even if prediction implies higher correction
+    // Should cap auto bolus at 6.0 units even if correction factor suggests more
     void testMaxBolusLimit() {
         auto* cgm = new MockCGM();
         cgm->glucose = 300.0f;
