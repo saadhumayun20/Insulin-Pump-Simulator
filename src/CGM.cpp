@@ -27,3 +27,8 @@ void CGM::updateGlucose(float value) {
     currentReadingTime = QDateTime::currentDateTime();
     emit glucoseUpdated(value);
 }
+
+void CGM::pairDevice() {
+    isPaired = true;
+    emit pairedStatusChanged(true);
+}

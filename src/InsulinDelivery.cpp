@@ -147,6 +147,14 @@ void InsulinDelivery::deliverExtendedBolus(float totalUnits,
     extendedTimer->start(3600000);
 }
 
+void InsulinDelivery::quickBolus() {
+    if (parentSystem->getInsulinLevel() < 2.0f) {
+        parentSystem->getAlerts()->triggerLowInsulinAlert();
+        return;
+    }
+    deliverBolus(2.0f);
+}
+
 // Getters
 float InsulinDelivery::getCurrentBasalRate() const {
     return currentBasalRate;

@@ -6,7 +6,7 @@
 class DeliveryEvent{
 
 public:
-    enum EventType {BASAL, BOLUS, SUSPEND, EXTENDED_BOLUS, OCCLUSION_ALARMS};
+    enum EventType {BASAL, BOLUS, SUSPEND, EXTENDED_BOLUS, OCCLUSION_ALARMS, BASAL_PAUSED, BASAL_RESUMED, PRIME};
 
     DeliveryEvent(EventType type, float units);
 

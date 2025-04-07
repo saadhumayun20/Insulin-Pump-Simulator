@@ -129,12 +129,19 @@ void MainWindow::setupConnections() {
     connect(ui->btnBolus, &QPushButton::clicked, this, &MainWindow::navigateToBolus);
     connect(ui->btnProfiles, &QPushButton::clicked, this, &MainWindow::navigateToProfiles);
     connect(ui->btnHistory, &QPushButton::clicked, this, &MainWindow::navigateToHistory);
+    connect(ui->btnMaintenance, &QPushButton::clicked, this, &MainWindow::navigateToPrime);
+    connect(ui->btnSettings, &QPushButton::clicked, this, &MainWindow::navigateToSettings);
     connect(ui->btnLock, &QPushButton::clicked, [=](){pumpSystem->lock();ui->stackedWidget->setCurrentWidget(ui->lockScreen);});
 
     // Bolus screen connections
     connect(ui->btnCalculate, &QPushButton::clicked, this, &MainWindow::handleBolusCalculation);
     connect(ui->btnDeliver, &QPushButton::clicked, this, &MainWindow::deliverBolus);
     connect(ui->btnBack_3, &QPushButton::clicked, [=](){ui->stackedWidget->setCurrentWidget(ui->homeScreen);});
+
+
+    connect(ui->btnQuickBolus, &QPushButton::clicked, [=](){
+        pumpSystem->getDeliverySystem()->quickBolus();
+    });
 
     // Profile screen connections
     connect(ui->btnAddProfile, &QPushButton::clicked, this, &MainWindow::addProfile);
@@ -177,6 +184,36 @@ void MainWindow::setupConnections() {
         pumpSystem->getAlerts()->triggerOcclusionAlarm();
     });
 
+    //BASAL BUTTONS
+    connect(ui->btnPauseBasal, &QPushButton::clicked, [=](){
+        pumpSystem->pauseBasal();
+        ui->btnPauseBasal->setEnabled(false);
+        ui->btnResumeBasal->setEnabled(true);
+    });
+
+    connect(ui->btnResumeBasal, &QPushButton::clicked, [=](){
+        pumpSystem->resumeBasal();
+        ui->btnPauseBasal->setEnabled(true);
+        ui->btnResumeBasal->setEnabled(false);
+    });
+
+    connect(ui->btnPrime, &QPushButton::clicked, [=](){
+        pumpSystem->primeInfusionSet();
+        updateUI();
+    });
+
+    connect(ui->btnBack_4, &QPushButton::clicked, [=](){ui->stackedWidget->setCurrentWidget(ui->homeScreen);});
+
+    //buttons for settings
+    connect(ui->btnPairCGM, &QPushButton::clicked, [=](){
+        pumpSystem->getGlucoseMonitor()->pairDevice();
+    });
+
+    connect(pumpSystem->getGlucoseMonitor(), &CGM::pairedStatusChanged, [=](bool paired){
+        ui->lblCGMStatus->setText(paired ? "Status: Paired" : "Status: Not Paired");
+    });
+
+    connect(ui->btnBack_5, &QPushButton::clicked, [=](){ui->stackedWidget->setCurrentWidget(ui->homeScreen);});
 }
 
 void MainWindow::setupCharts() {
@@ -238,6 +275,14 @@ void MainWindow::navigateToHistory() {
     ui->stackedWidget->setCurrentWidget(ui->historyScreen);
     ui->glucoseChart->repaint();
     updateDeliveryHistory();
+}
+
+void MainWindow::navigateToPrime() {
+    ui->stackedWidget->setCurrentWidget(ui->maintenanceScreen);
+}
+
+void MainWindow::navigateToSettings() {
+    ui->stackedWidget->setCurrentWidget(ui->settingsPage);
 }
 
 void MainWindow::handleBolusCalculation() {

@@ -85,3 +85,22 @@ void PumpSystem::setBatteryLevel(float level) {
 void PumpSystem::setInsulinLevel(float level) {
     insulinLevel = qMax(0.0f, level);
 }
+
+void PumpSystem::pauseBasal() {
+    delivery->stopBasal();
+    logger->logDeliveryEvent(DeliveryEvent(DeliveryEvent::BASAL_PAUSED, 0.0f));
+}
+
+void PumpSystem::resumeBasal() {
+    delivery->startBasal(currentProfile->getBasalRate());
+    logger->logDeliveryEvent(DeliveryEvent(DeliveryEvent::BASAL_RESUMED, 0.0f));
+}
+
+void PumpSystem::primeInfusionSet() {
+    if (insulinLevel < 2.0f) {
+        alerts->triggerLowInsulinAlert();
+        return;
+    }
+    insulinLevel -= 2.0f;
+    logger->logDeliveryEvent(DeliveryEvent(DeliveryEvent::PRIME, 2.0f));
+}

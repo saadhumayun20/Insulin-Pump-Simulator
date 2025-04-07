@@ -67,7 +67,6 @@ void ControlIQ::deliverAutoCorrection(float predictedGlucose) {
     Profile* profile = pump->getCurrentProfile();
     float correctionDose = (predictedGlucose - TARGET_HIGH) / profile->getCorrectionFactor();
 
-    // Apply 60% correction with safety limits
     float autoBolus = qBound(0.0f, correctionDose * 0.6f, MAX_AUTO_BOLUS);
 
     if(autoBolus > 0) {

@@ -38,6 +38,8 @@ private slots:
     void navigateToBolus();
     void navigateToProfiles();
     void navigateToHistory();
+    void navigateToPrime();
+    void navigateToSettings();
 
     // Functionality handlers
     void handleBolusCalculation();

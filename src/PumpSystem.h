@@ -27,6 +27,7 @@ public:
     void simulateOcclusion();
     void clearOcclusion();
     bool isOcclusionActive() const;
+    void primeInfusionSet();
 
     //getter/setters
     virtual InsulinDelivery* getDeliverySystem() const;
@@ -45,6 +46,10 @@ public:
 
     void setBatteryLevel(float level);
     void setInsulinLevel(float level);
+
+public slots:
+    void pauseBasal();
+    void resumeBasal();
 
 signals:
     void batteryLevelChanged(float batteryLevel);

@@ -15,12 +15,17 @@ public:
 
 signals:
     void glucoseUpdated(float value);
+    void pairedStatusChanged(bool paired);
+
+public slots:
+    void pairDevice();
 
 private:
     float currentGlucose;
     float previousGlucose;
     QDateTime currentReadingTime;
     QDateTime previousReadingTime;
+    bool isPaired = false;
 
 };
 
