@@ -9,7 +9,7 @@ SOURCES += gui_bolus_tests.cpp \
            ../../src/AlertSystem.cpp \
            ../../src/DataLogger.cpp \
            ../../src/DeliveryEvent.cpp \
-           ../../src/ControlIQ.cpp  # ← this line is new!
+           ../../src/ControlIQ.cpp
 
 HEADERS += ../../src/mainwindow.h \
            ../../src/PumpSystem.h \
@@ -19,7 +19,7 @@ HEADERS += ../../src/mainwindow.h \
            ../../src/AlertSystem.h \
            ../../src/DataLogger.h \
            ../../src/DeliveryEvent.h \
-           ../../src/ControlIQ.h  # ← also add the header
+           ../../src/ControlIQ.h 
 
 FORMS += ../../src/mainwindow.ui
 

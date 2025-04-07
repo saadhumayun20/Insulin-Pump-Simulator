@@ -17,7 +17,6 @@ private slots:
 
     // Test that required bolus screen elements exist.
     void testBolusScreenElementsExist() {
-        // Invoke the private navigateToBolus method.
         QMetaObject::invokeMethod(&mainWindow, "navigateToBolus", Qt::DirectConnection);
         // Find the elements by their object names.
         QLineEdit *txtCarbs = mainWindow.findChild<QLineEdit*>("txtCarbs");
@@ -47,7 +46,6 @@ private slots:
         QStackedWidget *stacked = mainWindow.findChild<QStackedWidget*>("stackedWidget");
         QVERIFY(stacked != nullptr);
         QWidget *currentScreen = stacked->currentWidget();
-        // Assuming the bolus screen's objectName is "bolusScreen"
         QCOMPARE(currentScreen->objectName(), QString("bolusScreen"));
     }
 };
