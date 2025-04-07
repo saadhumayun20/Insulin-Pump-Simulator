@@ -10,9 +10,9 @@ class AlertSystem : public QObject
 
 public:
     static AlertSystem* instance();
-    void triggerOcclusionAlarm();
-    void triggerLowInsulinAlert();
-    void triggerLowBatteryWarning();
+    virtual void triggerOcclusionAlarm();
+    virtual void triggerLowInsulinAlert();
+    virtual void triggerLowBatteryWarning();
 
     bool isOcclusionAlarmActive() const;
     bool isLowInsulinAlarmActive() const;
@@ -29,7 +29,7 @@ public slots:
     }
 
 
-private:
+protected:
     explicit AlertSystem(QObject *parent = nullptr);
     static AlertSystem* m_instance;
 

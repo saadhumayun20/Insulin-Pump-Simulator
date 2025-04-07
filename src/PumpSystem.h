@@ -20,7 +20,7 @@ public:
     void powerOff();
     bool unlock(int pin);
     void chargeBattery();
-    void updateInsulinLevel(float units);
+    virtual void updateInsulinLevel(float units);
     void lock();
 
     //for testing the occlusion
@@ -39,8 +39,8 @@ public:
 
 
     float getBatteryLevel() const;
-    float getInsulinLevel() const;
-    bool isLocked() const;
+    virtual float getInsulinLevel() const;
+    virtual bool isLocked() const;
     virtual Profile* getCurrentProfile() const;
     QList<Profile*>& getProfiles();
 
