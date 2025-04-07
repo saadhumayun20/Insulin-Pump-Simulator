@@ -50,8 +50,7 @@ public:
     void updateInsulinLevel(float u) override { insulin -= u; }
     bool isLocked() const override { return locked; }
     
-    // Remove override keyword for getAlerts() since base isn't virtual
-    AlertSystem* getAlerts() const { return alerts; }
+    AlertSystem* getAlerts() const override { return alerts; }
 
     // Custom accessors for test assertions
     FakeAlertSystem* getFakeAlerts() const { return alerts; }

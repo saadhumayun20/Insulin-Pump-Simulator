@@ -31,7 +31,7 @@ public:
 
     //getter/setters
     virtual InsulinDelivery* getDeliverySystem() const;
-    AlertSystem* getAlerts() const;
+    virtual AlertSystem* getAlerts() const;
     virtual DataLogger* getLogger() const;
     ControlIQ* getControlIQ() const;
     CGM* getGlucoseMonitor() const;
