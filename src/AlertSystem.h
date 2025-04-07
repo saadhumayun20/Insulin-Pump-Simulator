@@ -10,9 +10,9 @@ class AlertSystem : public QObject
 
 public:
     static AlertSystem* instance();
-    void triggerOcclusionAlarm();
-    void triggerLowInsulinAlert();
-    void triggerLowBatteryWarning();
+    virtual void triggerOcclusionAlarm();
+    virtual void triggerLowInsulinAlert();
+    virtual void triggerLowBatteryWarning();
 
     bool isOcclusionAlarmActive() const;  // For safety checks
     bool isLowInsulinAlarmActive() const;
@@ -21,7 +21,7 @@ public:
 signals:
     void alertTriggered(QString message);
 
-private:
+protected:
     explicit AlertSystem(QObject *parent = nullptr);
     static AlertSystem* m_instance;
 
