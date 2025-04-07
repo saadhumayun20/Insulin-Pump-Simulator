@@ -38,6 +38,8 @@ private slots:
     void navigateToBolus();
     void navigateToProfiles();
     void navigateToHistory();
+    void navigateToPrime();
+    void navigateToSettings();
 
     // Functionality handlers
     void handleBolusCalculation();
@@ -57,6 +59,7 @@ private:
     Ui::MainWindow *ui;
     PumpSystem *pumpSystem;
     QTimer *updateTimer;
+    QTimer *historyUpdateTimer;
     QLineSeries *glucoseSeries;
 
     QChart *glucoseChart;

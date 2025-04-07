@@ -19,6 +19,7 @@ public:
     virtual void deliverBolus(float units);
     void deliverExtendedBolus(float totalUnits, float immediateFraction, int durationHours);
     float calculateBolus(float glucose, float carbs) const;
+    void quickBolus();
 
     //getter
     float getCurrentBasalRate() const;

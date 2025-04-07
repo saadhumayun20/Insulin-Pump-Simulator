@@ -10,17 +10,22 @@ public:
     explicit CGM(QObject* parent = nullptr);
 
     virtual float readGlucose() const;
-    virtual float getTrend() const;  // New
-    void updateGlucose(float value);  // For simulation
+    virtual float getTrend() const;
+    void updateGlucose(float value);
 
 signals:
     void glucoseUpdated(float value);
+    void pairedStatusChanged(bool paired);
+
+public slots:
+    void pairDevice();
 
 private:
     float currentGlucose;
     float previousGlucose;
     QDateTime currentReadingTime;
     QDateTime previousReadingTime;
+    bool isPaired = false;
 
 };
 

@@ -14,12 +14,20 @@ public:
     virtual void triggerLowInsulinAlert();
     virtual void triggerLowBatteryWarning();
 
-    bool isOcclusionAlarmActive() const;  // For safety checks
+    bool isOcclusionAlarmActive() const;
     bool isLowInsulinAlarmActive() const;
     bool isLowBatteryAlarmActive() const;
 
 signals:
     void alertTriggered(QString message);
+
+public slots:
+    void clearAlerts() {
+        occlusionAlarmActive = false;
+        lowInsulinAlarmActive = false;
+        lowBatteryAlarmActive = false;
+    }
+
 
 protected:
     explicit AlertSystem(QObject *parent = nullptr);
