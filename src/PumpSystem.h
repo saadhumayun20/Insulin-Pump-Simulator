@@ -65,7 +65,7 @@ private:
     float batteryLevel;
     float insulinLevel;
     bool locked;
-    bool occlusionActive;
+    bool occlusionActive = false;
 
 };
 
