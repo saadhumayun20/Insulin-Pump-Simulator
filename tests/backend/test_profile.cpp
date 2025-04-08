@@ -1,5 +1,5 @@
 #include <QtTest>
-#include "../src/Profile.h"
+#include "../../src/Profile.h"
 
 class TestProfile : public QObject {
     Q_OBJECT

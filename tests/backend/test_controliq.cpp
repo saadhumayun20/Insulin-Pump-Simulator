@@ -1,11 +1,11 @@
 #include <QtTest>
-#include "../src/ControlIQ.h"
-#include "../src/DeliveryEvent.h"
-#include "../src/Profile.h"
-#include "../src/InsulinDelivery.h"
-#include "../src/DataLogger.h"
-#include "../src/CGM.h"
-#include "../src/PumpSystem.h"
+#include "../../src/ControlIQ.h"
+#include "../../src/DeliveryEvent.h"
+#include "../../src/Profile.h"
+#include "../../src/InsulinDelivery.h"
+#include "../../src/DataLogger.h"
+#include "../../src/CGM.h"
+#include "../../src/PumpSystem.h"
 
 // Mock CGM that returns custom glucose and trend values
 class MockCGM : public CGM {
