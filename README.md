@@ -46,6 +46,8 @@ Editing
 
 Activation
 
+![Profile tests](./assets/profile_tests.png)
+
 **CGM**
 
 Device pairing
@@ -53,6 +55,33 @@ Device pairing
 Glucose updates
 
 Signal emission
+![Profile tests](./assets/cgm_tests.png)
+
+**ControlIQ**
+
+Initialization and component linkage
+
+Glucose monitoring integration
+
+Basal rate adjustment logic
+
+![Profile tests](./assets/controliq_tests.png)
+
+**InsulinDelivery** 
+
+Bolus delivery
+
+Quick bolus functionality
+
+IOB (Insulin on Board) tracking
+
+![Profile tests](./assets/insulindelivery_tests.png)
+
+**GUI Bolus Tests**
+
+Bolus UI interaction and state update verification
+
+![Profile tests](./assets/gui_bolus_test.png)
 
 **AlertSystem**
 
@@ -64,27 +93,31 @@ Occlusion alarm trigger
 
 Alert clearing logic
 
-**ControlIQ**
-
-Initialization and component linkage
-
-Glucose monitoring integration
-
-Basal rate adjustment logic
-
-**InsulinDelivery** 
-
-Bolus delivery
-
-Quick bolus functionality
-
-IOB (Insulin on Board) tracking
-
-**GUI Integration Tests**
-
-Alert display (low insulin, low battery, occlusion)
-
-Delivery history chart updates
-
 ##  Directory Structure
+
+COMP3004-Final-Project/
+├── src/                    # Core application source code (C++/Qt)
+│   ├── mainwindow.*        # Main GUI logic
+│   ├── PumpSystem.*        # System controller
+│   ├── ControlIQ.*         # Automated insulin control logic
+│   ├── CGM.*               # Glucose monitoring simulation
+│   ├── AlertSystem.*       # Alert and warning logic
+│   ├── InsulinDelivery.*   # Insulin delivery system
+│   ├── Profile.*           # User-defined insulin profiles
+│   └── DataLogger.*        # Bolus history and logging
+│
+├── tests/
+│   ├── backend/            # Unit tests for system logic (QTest)
+│   │   ├── test_profile.cpp
+│   │   ├── test_cgm.cpp
+│   │   ├── test_controliq.cpp
+│   │   └── ...
+│   └── GUI/                # GUI integration tests (QTest)
+│       ├── gui_alert_tests.cpp
+│       ├── gui_bolus_tests.cpp
+│       └── ...
+│
+├── 3004_Project.pro        # Qt project file
+├── README.md
+└── .gitignore
 
