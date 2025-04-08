@@ -38,9 +38,53 @@ A Qt-based C++ simulation of a closed-loop insulin pump system inspired by Contr
 4) ./3004_Project     # Launches the simulator GUI
 
 ## Test Coverage (So Far)
-Profile: constructor, editing
+**Profile**
 
-CGM, AlertSystem, ControlIQ, InsulinDelivery (in process)
+Constructor
+
+Editing
+
+Activation
+
+**CGM**
+
+Device pairing
+
+Glucose updates
+
+Signal emission
+
+**AlertSystem**
+
+Low insulin alert trigger
+
+Low battery alert trigger
+
+Occlusion alarm trigger
+
+Alert clearing logic
+
+**ControlIQ**
+
+Initialization and component linkage
+
+Glucose monitoring integration
+
+Basal rate adjustment logic
+
+**InsulinDelivery** 
+
+Bolus delivery
+
+Quick bolus functionality
+
+IOB (Insulin on Board) tracking
+
+**GUI Integration Tests**
+
+Alert display (low insulin, low battery, occlusion)
+
+Delivery history chart updates
 
 ##  Directory Structure
 
