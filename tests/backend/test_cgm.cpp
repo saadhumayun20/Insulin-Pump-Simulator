@@ -1,5 +1,5 @@
 #include <QtTest>
-#include "../src/CGM.h"  // future: adjust if path changes
+#include "../../src/CGM.h" 
 #include <QSignalSpy>
 
 class TestCGM : public QObject {

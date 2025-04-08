@@ -1,10 +1,10 @@
 #include <QtTest>
-#include "../src/InsulinDelivery.h"
-#include "../src/DeliveryEvent.h"
-#include "../src/PumpSystem.h"
-#include "../src/Profile.h"
-#include "../src/DataLogger.h"
-#include "../src/AlertSystem.h"
+#include "../../src/InsulinDelivery.h"
+#include "../../src/DeliveryEvent.h"
+#include "../../src/PumpSystem.h"
+#include "../../src/Profile.h"
+#include "../../src/DataLogger.h"
+#include "../../src/AlertSystem.h"
 
 // Fake alert system that inherits from AlertSystem
 class FakeAlertSystem : public AlertSystem {
