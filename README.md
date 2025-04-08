@@ -95,6 +95,7 @@ Alert clearing logic
 
 ##  Directory Structure
 
+```
 COMP3004-Final-Project/
 ├── src/                    # Core application source code (C++/Qt)
 │   ├── mainwindow.*        # Main GUI logic
@@ -120,4 +121,4 @@ COMP3004-Final-Project/
 ├── 3004_Project.pro        # Qt project file
 ├── README.md
 └── .gitignore
-
+```
